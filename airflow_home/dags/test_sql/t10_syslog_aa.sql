@@ -1,8 +1,7 @@
 --DROP VIEW IF EXISTS t10_syslog_aa;
-DROP TABLE IF EXISTS t10_syslog_stage;
+DROP TABLE IF EXISTS airflow_test.t10_syslog_stage;
 
-
-CREATE TABLE t10_syslog_stage DISTKEY(user_id) INTERLEAVED SORTKEY(utc_start_time, code) AS
+CREATE TABLE airflow_test.t10_syslog_stage DISTKEY(user_id) INTERLEAVED SORTKEY(utc_start_time, code) AS
 SELECT *,
        DATEADD(s,utc_start_time,'1970-01-01 00:00') AS date,
        DATE_TRUNC('DAY', DATEADD(s,utc_start_time,'1970-01-01 00:00')) AS DAY
@@ -20,8 +19,8 @@ FROM
    WHERE (raw_device_data.data_type = 10)
      AND DATEADD(s,sync_date,'1970-01-01 00:00') >= DATEADD('DAY', -30,GETDATE()));
 
-DROP TABLE IF EXISTS t10_syslog_fw_stage;
-CREATE TABLE t10_syslog_fw_stage DISTKEY(user_id) INTERLEAVED SORTKEY(utc_start_time, code) AS
+DROP TABLE IF EXISTS airflow_test.t10_syslog_fw_stage;
+CREATE TABLE airflow_test.t10_syslog_fw_stage DISTKEY(user_id) INTERLEAVED SORTKEY(utc_start_time, code) AS
 SELECT *
 FROM
   (SELECT t2.*,
@@ -35,25 +34,18 @@ FROM
    FROM
      (SELECT *
       FROM t19_version_changes) t1
-   INNER JOIN t10_syslog_stage t2 ON t1.user_id = t2.user_id
+   INNER JOIN airflow_test.t10_syslog_stage t2 ON t1.user_id = t2.user_id
    AND t1.serial_number = t2.serial_number
    AND t1.utc_start_time <= t2.utc_start_time
    AND t1.utc_end_time >= t2.utc_start_time);
 
-
-
-
-
-
-
-
-DROP TABLE IF EXISTS t10_syslog_aa CASCADE;
-ALTER TABLE t10_syslog_stage RENAME TO t10_syslog_aa;
-DROP TABLE IF EXISTS t10_syslog_fw CASCADE;
-ALTER TABLE t10_syslog_fw_stage RENAME TO t10_syslog_fw;
+DROP TABLE IF EXISTS airflow_test.t10_syslog_aa CASCADE;
+ALTER TABLE airflow_test.t10_syslog_stage RENAME TO t10_syslog_aa;
+DROP TABLE IF EXISTS airflow_test.t10_syslog_fw CASCADE;
+ALTER TABLE airflow_test.t10_syslog_fw_stage RENAME TO t10_syslog_fw;
 
 SELECT *
-FROM t10_syslog_fw
+FROM airflow_test.t10_syslog_fw
 WHERE date > DATEADD('DAY',-1,GETDATE())
 ORDER BY sync_date DESC,
          segment_number DESC LIMIT 100;
