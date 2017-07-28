@@ -29,74 +29,86 @@ ________________________________________________________________________________
 ### Install Python
 
 ### Install Airflow and Airflow Packages
-pip install airflow[crypto,celery,postgres,redis]
+`pip install airflow[crypto,celery,postgres,redis]`
 
 ### Create project home and export ENV variable for AIRFLOW_HOME
-mkdir airflow_home
-export AIRFLOW_HOME=`pwd`/airflow_home
-airflow version
+`mkdir airflow_home`
+`export AIRFLOW_HOME='pwd'airflow_home` # use back ticks
+`airflow version`
 
 ### Create needed directories
-mkdir dags
-mkdir logs
+`mkdir dags`
+`mkdir logs`
 
 ### Change the Executor to CeleryExecutor (Recommended for production)
-executor = CeleryExecutor 
+`executor = CeleryExecutor `
 
 ### Point SQL Alchemy to Postgres (username, password, host, db_name)
-sql_alchemy_conn = postgresql+psycopg2://airflow:airflow@localhost:5432/motiv_airflow 
+`sql_alchemy_conn = postgresql+psycopg2://airflow:airflow@localhost:5432/motiv_airflow `
 
 ### Are DAGs paused by default at creation
-dags_are_paused_at_creation = True 
+`dags_are_paused_at_creation = True `
 
 ### Don’t load examples
-load_examples = False 
+`load_examples = False `
 
 ### Set the Broker URL (If you’re using CeleryExecutors)
-broker_url = redis://localhost:6379/0
+`broker_url = redis://localhost:6379/0`
 
 ### Point Celery to Postgres
 celery_result_backend = db+postgresql+psycopg2://airflow:airflow@localhost:5432/motiv_airflow
 
 ### Install postgres
-brew install postgresql # For Mac, the command varies for different OS
+`brew install postgresql` # For Mac, the command varies for different OS
 
 ### Connect to the database
-psql -d postgres # This will open a prompt
+`psql -d postgres # This will open a prompt`
 
 ### Operate on the database server
 
-`\l` # List all databases
-`\du` # List all users/roles
-`\dt` # Show all tables in database
-`\h` # List help information
-`\q` # Quit the prompt
+- `\l` # List all databases
+
+- `\du` # List all users/roles
+
+- `\dt` # Show all tables in database
+
+- `\h` # List help information
+
+- `\q` # Quit the prompt
 
 ### Create a meta db for airflow
-CREATE DATABASE motiv_airflow;
+`CREATE DATABASE motiv_airflow;`
 
 ### Create a user and grant privileges (run the commands below under superuser of postgres)
+```
 CREATE USER airflow WITH ENCRYPTED PASSWORD ‘airflow’;
 GRANT ALL PRIVILEGES ON DATABASE motiv_airflow TO airflow;
 GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO airflow;
+```
 
 ### Make sure config has correct database name
-airflow initdb
+`airflow initdb`
 
 ### Establish your own connections via the web UI; you can test your DB connections via the Ad Hoc Query (see here)
 #### Go to the web UI: Admin -> Connection -> Create
 
-Connection ID: name it
-Connection Type: e.g., database/AWS
-Host: e.g., your database server name or address
-Scheme: e.g., your database
-Username: your user name
-Password: will be encrypted if airflow[crypto] is installed
-Extra: additional configuration in JSON, e.g., AWS credentials
+- Connection ID: name it
+
+- Connection Type: e.g., database/AWS
+
+- Host: e.g., your database server name or address
+
+- Scheme: e.g., your database
+
+- Username: your user name
+
+- Password: will be encrypted if airflow[crypto] is installed
+
+- Extra: additional configuration in JSON, e.g., AWS credentials
 
 ### Encrypt your credentials
 #### Generate a valid Fernet key and place it into airflow.cfg
-FERNET_KEY=$(python -c "from cryptography.fernet import Fernet; FERNET_KEY = Fernet.generate_key().decode(); print FERNET_KEY")
+`FERNET_KEY=$(python -c "from cryptography.fernet import Fernet; FERNET_KEY = Fernet.generate_key().decode(); print FERNET_KEY")`
 
 ________________________________________________________________________________
 
