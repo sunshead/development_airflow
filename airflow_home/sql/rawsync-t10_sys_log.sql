@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS rawsync.t10_syslog_stage;
+DROP TABLE IF EXISTS airflow_test.t10_syslog_stage;
 
-CREATE TABLE rawsync.t10_syslog_stage
+CREATE TABLE airflow_test.t10_syslog_stage
   DISTKEY(parse_user_id) INTERLEAVED SORTKEY(utc_start_at, log_id, log_code)
 AS
 SELECT
@@ -36,6 +36,6 @@ FROM rawsync.raw_tlvs tlv
 FULL OUTER JOIN parse.user u ON u._metadata_doc_id = tlv.parse_user_id
 WHERE tlv_type = 10;
 
-DROP TABLE IF EXISTS rawsync.t10_syslog;
-SET search_path TO rawsync;
-ALTER TABLE rawsync.t10_syslog_stage RENAME TO t10_syslog;
+DROP TABLE IF EXISTS airflow_test.t10_syslog;
+SET search_path TO airflow_test;
+ALTER TABLE airflow_test.t10_syslog_stage RENAME TO t10_syslog;
