@@ -55,7 +55,7 @@ load_examples = False 
 ### Set the Broker URL (If you’re using CeleryExecutors)
 broker_url = redis://localhost:6379/0
 
-###Point Celery to Postgres
+### Point Celery to Postgres
 celery_result_backend = db+postgresql+psycopg2://airflow:airflow@localhost:5432/motiv_airflow
 
 ### Install postgres
@@ -65,11 +65,12 @@ brew install postgresql # For Mac, the command varies for different OS
 psql -d postgres # This will open a prompt
 
 ### Operate on the database server
-\l # List all databases
-\du # List all users/roles
-\dt # Show all tables in database
-\h # List help information
-\q # Quit the prompt
+
+`\l` # List all databases
+`\du` # List all users/roles
+`\dt` # Show all tables in database
+`\h` # List help information
+`\q` # Quit the prompt
 
 ### Create a meta db for airflow
 CREATE DATABASE motiv_airflow;
@@ -97,6 +98,7 @@ Extra: additional configuration in JSON, e.g., AWS credentials
 #### Generate a valid Fernet key and place it into airflow.cfg
 FERNET_KEY=$(python -c "from cryptography.fernet import Fernet; FERNET_KEY = Fernet.generate_key().decode(); print FERNET_KEY")
 
+________________________________________________________________________________
 
 # Troubleshooting
 ### `airflow scheduler` is not using the Executor that I specified in configuration
