@@ -32,9 +32,11 @@ ________________________________________________________________________________
 `pip install airflow[crypto,celery,postgres,redis]`
 
 ### Create project home and export ENV variable for AIRFLOW_HOME
-`mkdir airflow_home`
-`export AIRFLOW_HOME='pwd'airflow_home` # use back ticks
-`airflow version`
+```
+mkdir airflow_home
+export AIRFLOW_HOME=`pwd`airflow_home
+airflow version
+```
 
 ### Create needed directories
 `mkdir dags`
